@@ -1,6 +1,6 @@
 # KittyLost : Help the kitty to find his way ! 
 
-![Sad Cat Platformer](assets/kittylos_.png)
+![Sad Cat Platformer](assets/Menu_screen.png)
 
 
 A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
@@ -25,7 +25,7 @@ Obstacle : Avoid ennemies, water and pics.
 
 ### Movements :
 
-- Jump : space bar
+- Jump : z
 - Double jump : double space bar
 - Attack : K button (pawpunch)
 
