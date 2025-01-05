@@ -3,9 +3,12 @@ package com.badlogic.kittylost;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
+
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class Player {
     private Texture texture;
@@ -13,12 +16,13 @@ public class Player {
     private float x, y;  // Position du joueur
     private float speed;
     private float velocityY;  // Vitesse verticale (pour la gravité et le saut)
-    private float gravity = -800f;  // Force de gravité, plus la valeur est petite, plus la gravité est forte
+    private float gravity = -600f;  // Force de gravité
     private float jumpStrength = 300f;  // La force du saut
     private boolean isJumping = false;  // Pour savoir si le joueur est en train de sauter
     private boolean isOnGround = false;  // Vérifie si le joueur touche le sol
 
-    // Initialisation du joueur
+    private ShapeRenderer shapeRenderer;
+
     public Player(String texturePath, float startX, float startY, float speed) {
         this.texture = new Texture(texturePath);
         this.sprite = new Sprite(texture);
@@ -26,63 +30,90 @@ public class Player {
         this.y = startY;
         this.speed = speed;
 
-        sprite.setSize(64, 64);  // Taille du sprite
+        shapeRenderer = new ShapeRenderer();
+
+        sprite.setSize(55, 50);  // Taille du sprite
         sprite.setPosition(x, y);
     }
 
-    // Mise à jour du joueur (gestion du déplacement et du saut)
-    public void update(float deltaTime) {
-        // Déplacement du joueur
+    public void update(float deltaTime, Array<Rectangle> collisionRectangles) {
+        float oldX = x, oldY = y; // Sauvegarder la position précédente
+        float newX = x , newY = y;
+
+        // Déplacement horizontal
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            x += speed * deltaTime;
+            newX += speed * deltaTime;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            x -= speed * deltaTime;
+            newX -= speed * deltaTime;
         }
 
-        // Saut
-        if (Gdx.input.isKeyPressed(Input.Keys.W) && isOnGround && !isJumping) {
-            isJumping = true;
-            velocityY = jumpStrength;  // Applique la force de saut
-            isOnGround = false;  // Le joueur n'est plus au sol
-        }
-
-        // Application de la gravité
+        // Gestion de la gravité et du saut
         if (!isOnGround) {
-            velocityY += gravity * deltaTime;  // La gravité fait diminuer la vitesse verticale
+            velocityY += gravity * deltaTime; // Applique la gravité si le joueur n'est pas au sol
         }
 
-        // Mise à jour de la position verticale
-        y += velocityY * deltaTime;
-
-        // Vérifier si le joueur est au sol
-        if (y <= 0) {  // Supposons que le sol soit à y = 0
-            y = 0;
-            isOnGround = true;
-            isJumping = false;
-            velocityY = 0;
+        if (Gdx.input.isKeyPressed(Input.Keys.W) && isOnGround) {
+            velocityY = jumpStrength; // Applique la force de saut
+            isJumping = true; // Déclare que le joueur est en train de sauter
+            isOnGround = false; // Le joueur n'est plus au sol
         }
+
+        newY += velocityY * deltaTime;
+
+        // Vérification des collisions
+        //Rectangle playerRect = new Rectangle(newX, newY, sprite.getWidth(), sprite.getHeight());
+        Rectangle playerRect = new Rectangle(
+            newX,
+            newY , // Ajuster de 10 pixels vers le bas
+            sprite.getWidth(),
+            sprite.getHeight()  // Réduire la hauteur de la collision
+        );
+        isOnGround = false; // Réinitialiser la détection au sol pour cette mise à jour
+
+        for (Rectangle rect : collisionRectangles) {
+            if (playerRect.overlaps(rect)) {
+                // Collision verticale
+                if (oldY >= rect.y + rect.height) {
+                    newY = rect.y + rect.height ; // Positionner au-dessus de la plateforme
+                    velocityY = 0; // Stopper le mouvement vertical
+                    isOnGround = true; // Le joueur est sur le sol
+                    isJumping = false; // Le saut est terminé
+                } else if (oldY + sprite.getHeight() <= rect.y) {
+                    newY = rect.y - sprite.getHeight(); // Bloquer en dessous
+                    velocityY = 0;
+                }
+
+                // Collision horizontale
+                if (oldX + sprite.getWidth() <= rect.x) {
+                    newX = rect.x - sprite.getWidth(); // Bloquer à gauche
+                } else if (oldX >= rect.x + rect.width) {
+                    newX = rect.x + rect.width; // Bloquer à droite
+                }
+            }
+        }
+
+        // Appliquer la nouvelle position
+        x = newX;
+        y = newY;
 
         // Mettre à jour la position du sprite
         sprite.setPosition(x, y);
     }
 
-    // Rendu du joueur
+
     public void render(SpriteBatch batch) {
         sprite.draw(batch);
     }
 
-    // Getter pour la position X
     public float getX() {
         return x;
     }
 
-    // Getter pour la position Y
     public float getY() {
         return y;
     }
 
-    // Méthode de nettoyage pour libérer les ressources
     public void dispose() {
         texture.dispose();
     }
