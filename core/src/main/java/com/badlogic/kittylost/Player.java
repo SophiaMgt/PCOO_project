@@ -5,7 +5,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.utils.Array;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -20,6 +22,7 @@ public class Player {
     private float jumpStrength = 300f;  // La force du saut
     private boolean isJumping = false;  // Pour savoir si le joueur est en train de sauter
     private boolean isOnGround = false;  // Vérifie si le joueur touche le sol
+    private boolean isDead = false;
 
     private ShapeRenderer shapeRenderer;
 
@@ -36,7 +39,7 @@ public class Player {
         sprite.setPosition(x, y);
     }
 
-    public void update(float deltaTime, Array<Rectangle> collisionRectangles) {
+    public void update(float deltaTime, Array<Rectangle> collisionRectangles, Array<Polygon> trap) {
         float oldX = x, oldY = y; // Sauvegarder la position précédente
         float newX = x , newY = y;
 
@@ -93,6 +96,19 @@ public class Player {
             }
         }
 
+        // Vérification des collisions avec les pièges
+        for (Polygon traps : trap) {
+            if (Intersector.overlapConvexPolygons(traps, new Polygon(new float[]{
+                newX, newY,
+                newX + sprite.getWidth(), newY,
+                newX + sprite.getWidth(), newY + sprite.getHeight(),
+                newX, newY + sprite.getHeight()
+            }))) {
+                System.out.println("Game Over!"); // Affiche Game Over dans la console
+                isDead = true; // permet de réinitialiser la partie et afficher un écran de Game Over
+            }
+        }
+
         // Appliquer la nouvelle position
         x = newX;
         y = newY;
@@ -101,6 +117,9 @@ public class Player {
         sprite.setPosition(x, y);
     }
 
+    public boolean isDead() {
+        return isDead;
+    }
 
     public void render(SpriteBatch batch) {
         sprite.draw(batch);
