@@ -9,8 +9,8 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthoCachedTiledMapRenderer;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
@@ -19,7 +19,7 @@ import com.badlogic.gdx.math.Polygon;
 public class GameScreen implements Screen {
     private final KittyLostGame game;
     private SpriteBatch batch;
-    private OrthoCachedTiledMapRenderer renderer;
+    private OrthogonalTiledMapRenderer renderer;
     private TiledMap map;
     private OrthographicCamera camera;
     private Player player;
@@ -33,8 +33,8 @@ public class GameScreen implements Screen {
         this.game = game;
 
         batch = new SpriteBatch();
-        map = new TmxMapLoader().load("map2.tmx");
-        renderer = new OrthoCachedTiledMapRenderer(map);
+        map = new TmxMapLoader().load("long_map.tmx");
+        renderer = new OrthogonalTiledMapRenderer(map);
 
         // Initialisation de la caméra
         camera = new OrthographicCamera();
