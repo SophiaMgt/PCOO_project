@@ -6,14 +6,12 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class MainMenuScreen implements Screen {
     private final KittyLostGame game;
     private SpriteBatch batch;
     private Texture menuImage;
     private OrthographicCamera camera;
-    private Viewport viewport;
 
     public MainMenuScreen(KittyLostGame game) {
         this.game = game;
