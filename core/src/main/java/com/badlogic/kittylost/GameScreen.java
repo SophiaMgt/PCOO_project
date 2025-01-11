@@ -17,8 +17,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class GameScreen implements Screen {
     private final KittyLostGame game;
@@ -26,7 +24,6 @@ public class GameScreen implements Screen {
     private OrthogonalTiledMapRenderer renderer;
     private TiledMap map;
     private OrthographicCamera camera;
-    private Viewport viewport; // Ajouter un viewport pour gerer l'agrandissement de la fenètre
 
     private Player player;
     private Array<Rectangle> collisionRectangles;
@@ -52,7 +49,7 @@ public class GameScreen implements Screen {
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         // Initialisation du joueur
-        player = new Player("tile002.png", 100, 290, 200);
+        player = new Player("catracter.png", 100, 290, 200);
 
         // Game Over
         gameOverTexture = new Texture("game_over.jpg");
@@ -95,7 +92,7 @@ public class GameScreen implements Screen {
     // si le joueur meurt
     private void resetGame() {
         // Réinitialiser la position du joueur
-        player = new Player("tile002.png", 100, 290, 200);
+        player = new Player("catracter.png", 100, 290, 200);
         isGameOver = false; // Réinitialiser l'état Game Over
     }
 
