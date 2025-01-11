@@ -26,6 +26,14 @@ public class Player {
 
     private ShapeRenderer shapeRenderer;
 
+    public float getWidth() {
+        return sprite.getWidth();
+    }
+
+    public float getHeight() {
+        return sprite.getHeight();
+    }
+
     public Player(String texturePath, float startX, float startY, float speed) {
         this.texture = new Texture(texturePath);
         this.sprite = new Sprite(texture);

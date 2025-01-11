@@ -3,6 +3,7 @@ package com.badlogic.kittylost;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -25,6 +26,11 @@ public class GameScreen implements Screen {
     private Player player;
     private Array<Rectangle> collisionRectangles;
     private Array<Polygon> trap;
+
+    private Texture fishTexture; // Texture des poissons
+    private Array<Rectangle> fishRectangles; // Liste des poissons
+    private int score; // Score du joueur
+    private BitmapFont font; // Police pour afficher le sco
 
     private Texture gameOverTexture; // Texture pour l'image Game Over
     private boolean isGameOver = false; // Indique si le joueur est mort
@@ -63,6 +69,21 @@ public class GameScreen implements Screen {
                 trap.add(traps);
             }
         }
+
+        // Charger les poissons
+        fishTexture = new Texture("fish.png"); // Texture du poisson
+        fishRectangles = new Array<>();
+        for (MapObject object : map.getLayers().get("poisson").getObjects()) {
+            if (object instanceof RectangleMapObject) {
+                Rectangle rect = ((RectangleMapObject) object).getRectangle();
+                fishRectangles.add(rect);
+            }
+        }
+
+        // Initialiser le score et la police
+        score = 0;
+        font = new BitmapFont(); // Utiliser une police par défaut
+        font.getData().setScale(2); // Agrandir la police pour qu'elle soit lisible
     }
 
     // si le joueur meurt
@@ -101,6 +122,18 @@ public class GameScreen implements Screen {
                 isGameOver = true;
             }
 
+            // Vérification de la collecte des poissons
+            Rectangle playerRect = new Rectangle(player.getX(), player.getY(), player.getWidth(), player.getHeight());
+            Array<Rectangle> collectedFishes = new Array<>();
+
+            for (Rectangle fish : fishRectangles) {
+                if (playerRect.overlaps(fish)) {
+                    collectedFishes.add(fish); // Ajouter à la liste des poissons collectés
+                    score += 1; // Incrémenter le score
+                }
+            }
+            fishRectangles.removeAll(collectedFishes, true); // Supprimer les poissons collectés
+
             // Mettre à jour la position de la caméra
             camera.position.set(player.getX(), player.getY(), 0);
             float mapWidth = map.getProperties().get("width", Integer.class) * 32;
@@ -109,11 +142,22 @@ public class GameScreen implements Screen {
             camera.position.y = Math.max(camera.viewportHeight / 2, Math.min(camera.position.y, mapHeight - camera.viewportHeight / 2));
             camera.update();
 
-            // Rendu de la carte et du joueur
+            // Rendu de la carte
             batch.begin();
             renderer.setView(camera);
             renderer.render();
+
+            // Dessiner les poissons
+            for (Rectangle fish : fishRectangles) {
+                batch.draw(fishTexture, fish.x, fish.y, fish.width, fish.height);
+            }
+
+            // Dessiner le joueur
             player.render(batch);
+
+            // Afficher le score
+            font.draw(batch, "Score: " + score, camera.position.x + Gdx.graphics.getWidth() / 2 - 150, camera.position.y + Gdx.graphics.getHeight() / 2 - 20);
+
             batch.end();
         }
     }
@@ -139,5 +183,7 @@ public class GameScreen implements Screen {
         batch.dispose();
         player.dispose();
         gameOverTexture.dispose();
+        fishTexture.dispose();
+        font.dispose();
     }
 }
