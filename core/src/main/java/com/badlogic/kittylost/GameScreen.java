@@ -2,6 +2,7 @@ package com.badlogic.kittylost;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -16,6 +17,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class GameScreen implements Screen {
     private final KittyLostGame game;
@@ -23,14 +26,16 @@ public class GameScreen implements Screen {
     private OrthogonalTiledMapRenderer renderer;
     private TiledMap map;
     private OrthographicCamera camera;
+    private Viewport viewport; // Ajouter un viewport pour gerer l'agrandissement de la fenètre
+
     private Player player;
     private Array<Rectangle> collisionRectangles;
     private Array<Polygon> trap;
-
     private Texture fishTexture; // Texture des poissons
     private Array<Rectangle> fishRectangles; // Liste des poissons
+
     private int score; // Score du joueur
-    private BitmapFont font; // Police pour afficher le sco
+    private BitmapFont font; // Police pour afficher le score
 
     private Texture gameOverTexture; // Texture pour l'image Game Over
     private boolean isGameOver = false; // Indique si le joueur est mort
@@ -83,6 +88,7 @@ public class GameScreen implements Screen {
         // Initialiser le score et la police
         score = 0;
         font = new BitmapFont(); // Utiliser une police par défaut
+        font.setColor(Color.BLACK);
         font.getData().setScale(2); // Agrandir la police pour qu'elle soit lisible
     }
 
