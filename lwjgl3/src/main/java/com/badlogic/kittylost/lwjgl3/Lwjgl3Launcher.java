@@ -12,7 +12,6 @@ public class Lwjgl3Launcher {
     }
 
     private static Lwjgl3Application createApplication() {
-        // Remplacer GameScreen par KittyLostGame ici
         return new Lwjgl3Application(new KittyLostGame(), getDefaultConfiguration());
     }
 
