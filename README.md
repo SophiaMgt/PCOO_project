@@ -46,6 +46,8 @@ or execute the main script in a IDE
 
 (Java 17 required) 
 
+This game may get on your nerves, that's the goal! That's way there is no checkpoint Only the most motivated person can win this game ! It's a cute but frustrating game. Be the best and the most tenacious! 
+
 May the fish be with you ! 
 
 ## Platforms
