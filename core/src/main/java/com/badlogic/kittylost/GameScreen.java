@@ -98,7 +98,7 @@ public class GameScreen implements Screen {
         score = 0;
         death_count = 0;
         font = new BitmapFont(); // Utiliser une police par défaut
-        font.setColor(Color.BLACK);
+        font.setColor(new Color(205 / 255f, 170 / 255f, 75 / 255f, 1));
         font.getData().setScale(2); // Agrandir la police pour qu'elle soit lisible
     }
 
@@ -178,10 +178,10 @@ public class GameScreen implements Screen {
 
             // Afficher les scores
             font.draw(batch, "Score: " + score, camera.position.x + Gdx.graphics.getWidth() / 2 - 150, camera.position.y + Gdx.graphics.getHeight() / 2 - 20);
-            font.draw(batch, "Mort : " + death_count, camera.position.x + Gdx.graphics.getWidth() / 2 - 600, camera.position.y + Gdx.graphics.getHeight() / 2 - 20);
+            font.draw(batch, "Dead : " + death_count, camera.position.x + Gdx.graphics.getWidth() / 2 - 600, camera.position.y + Gdx.graphics.getHeight() / 2 - 20);
 
             if (endWin) {
-                font.draw(batch, "Vous avez gagné !", camera.position.x, camera.position.y); // Afficher "Win!" au centre
+                font.draw(batch, "You've won !", camera.position.x, camera.position.y); // Afficher "Win!" au centre
             }
 
             batch.end();

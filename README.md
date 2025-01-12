@@ -9,32 +9,44 @@ This project was generated with a template including simple application launcher
 
 ## Description
 
-Kittylost is a 2D plateform game, the player (cat) has to find the way to go back home. The player needs to avoid dogs, water and pics and has to collect dry food and go through 10 levels to acheive the game. 
+Kittylost is a 2D plateform game, the player (cat) has to find the way to go back home. The player needs to avoid pics, water and falling down. Collect fish to enhance your score! The player win when he goes through all the map! The higer the score is the better it is ! The less number of time you die the better it is ! Pay attention to traps !
 
 ## Fonctionnalities
 
-- Lives count : The player start the game with 5 lifes for all the levels.
-- Maps/level : The game is composed by 10 levels. One map for one level. It gets more complicate/complex each time. 
-- Ennemies : There are two types of ennemy little dog "lildawg" that can be killed by one paw punch and big dog "Bulldawg" that can be killed by two paw punches.
-Score : Collect dry food to enhance your score. 
-- NPC : At the beginning of the game talk to Nekosensei to find your way!
-Obstacle : Avoid ennemies, water and pics.
+- Maps : The game is composed by a large map with different theme. It gets more complicate/complex over time. 
+- Score : Collect fish to enhance your score. The score max is 100 fishes 
+- Obstacle : Avoid water, pics, quicksand and falling down .
 
 
 ## Playing mechanics
 
 ### Movements :
 
-- Jump : z
-- Double jump : double space bar
-- Attack : K button (pawpunch)
+For an azerty keyboard:
+
+ - Jump : Z
+- Move forward : D
+- Move backward : Q
+
+For a qwerty keyboard:
+
+ - Jump : W
+- Move forward : A
+- Move backward : Q
 
 ### Characters: 
 
 - Hero : The player is a kitty (Poticha).
-- Neko sensei : Big old cat at the beginning that told the rules.
-- Lildawg : Little fragile but fast ennemy.
-- Bulldawg : More robust but slower.
+
+### To launch the game: 
+In a terminal cd to the principal file and launch with this command line: 
+JAVA_HOME=$(/usr/libexec/java_home -v 17) ./gradlew lwjgl3:run
+
+or execute the main script in a IDE 
+
+(Java 17 required) 
+
+May the fish be with you ! 
 
 ## Platforms
 
