@@ -24,8 +24,6 @@ public class Player {
     private boolean isOnGround = false;  // Check if the player is on the ground
     private boolean isDead = false;
 
-    private ShapeRenderer shapeRenderer;
-
     public float getWidth() {
         return sprite.getWidth();
     }
@@ -41,7 +39,7 @@ public class Player {
         this.y = startY;
         this.speed = speed;
 
-        shapeRenderer = new ShapeRenderer();
+        ShapeRenderer shapeRenderer = new ShapeRenderer();
 
         sprite.setSize(55, 50);  // Taille du sprite
         sprite.setPosition(x, y);
