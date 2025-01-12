@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="700" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="3093">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="700" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="3095">
  <tileset firstgid="1" name="bg" tilewidth="32" tileheight="32" tilecount="400" columns="20">
   <image source="bg.png" trans="252634" width="640" height="640"/>
  </tileset>
@@ -298,7 +298,6 @@
   <object id="2870" x="12735.9" y="159.123" width="158.008" height="31.7225" rotation="269.924"/>
   <object id="2871" x="12479.3" y="160.19" width="158.008" height="31.7225" rotation="269.924"/>
   <object id="2872" x="12352.4" y="255.352" width="253.16" height="31.7225" rotation="269.924"/>
-  <object id="2873" x="0.298141" y="385.408" width="383.222" height="31.7225" rotation="269.924"/>
   <object id="2874" x="12799.8" y="349.92" width="95.1983" height="34.4893"/>
   <object id="2875" x="13023.9" y="254.464" width="95.1983" height="34.4893"/>
   <object id="2876" x="12479.6" y="287.908" width="31.8466" height="17.4409"/>
@@ -402,6 +401,8 @@
   <object id="3087" x="14911.5" y="192.16" width="66.2825" height="31.2804"/>
   <object id="3089" x="7520.8" y="223.442" width="62.1755" height="16.4681"/>
   <object id="3091" x="7616.18" y="321.168" width="32.6208" height="15.3204" rotation="179.925"/>
+  <object id="3093" x="22385" y="240.139" width="13.2843" height="142.04"/>
+  <object id="3094" x="1.02187" y="167.586" width="15.328" height="216.636"/>
  </objectgroup>
  <objectgroup id="9" name="poisson">
   <object id="3073" x="1149.97" y="285.331" width="31.1093" height="31.6882"/>
