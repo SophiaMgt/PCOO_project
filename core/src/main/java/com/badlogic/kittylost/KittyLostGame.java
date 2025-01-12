@@ -5,16 +5,16 @@ import com.badlogic.gdx.Game;
 public class KittyLostGame extends Game {
     @Override
     public void create() {
-        this.setScreen(new MainMenuScreen(this)); // Démarre avec l'écran du menu principal
+        this.setScreen(new MainMenuScreen(this)); // Starts with main menu screen
     }
 
     @Override
     public void render() {
-        super.render(); // Appelle la méthode `render` de l'écran actuel
+        super.render(); // Calls the `render` method of the current screen
     }
 
     @Override
     public void dispose() {
-        getScreen().dispose(); // Libère les ressources de l'écran actuel
+        getScreen().dispose(); // Frees up current screen resources
     }
 }

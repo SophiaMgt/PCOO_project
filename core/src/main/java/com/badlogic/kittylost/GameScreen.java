@@ -28,18 +28,18 @@ public class GameScreen implements Screen {
     private Player player;
     private Array<Rectangle> collisionRectangles;
     private Array<Polygon> trap;
-    private Texture fishTexture; // Texture des poissons
-    private Array<Rectangle> fishRectangles; // Liste des poissons
+    private Texture fishTexture; // Fish texture
+    private Array<Rectangle> fishRectangles; // Fish List
 
     private int score;
-    private int death_count;// Score du joueur
-    private BitmapFont font; // Police pour afficher le score
+    private int death_count;// Player score
+    private BitmapFont font; // Font for displaying text
 
-    private Texture gameOverTexture; // Texture pour l'image Game Over
-    private boolean isGameOver = false; // Indique si le joueur est mort
+    private Texture gameOverTexture; // Texture for Game Over image
+    private boolean isGameOver = false; // Indicates whether the player is dead
 
-    private Rectangle endGameZone; // Zone de fin
-    private boolean endWin = false; // Indique si le joueur a gagné
+    private Rectangle endGameZone; // End zone
+    private boolean endWin = false; // Indicates whether the player has won
 
     public GameScreen(KittyLostGame game) {
         this.game = game;
@@ -48,17 +48,17 @@ public class GameScreen implements Screen {
         map = new TmxMapLoader().load("long_map.tmx");
         renderer = new OrthogonalTiledMapRenderer(map);
 
-        // Initialisation de la caméra
+        // Camera initialization
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        // Initialisation du joueur
+        // Player initialization
         player = new Player("catracter.png", 100, 290, 200);
 
         // Game Over
         gameOverTexture = new Texture("game_over.jpg");
 
-        // Charger les rectangles de collision
+        // Load collision rectangles
         collisionRectangles = new Array<>();
         for (MapObject object : map.getLayers().get("collision").getObjects()) {
             if (object instanceof RectangleMapObject) {
@@ -67,7 +67,7 @@ public class GameScreen implements Screen {
             }
         }
 
-        // Charger la zone de fin
+        // Load the end zone
         for (MapObject object : map.getLayers().get("end_zone").getObjects()) {
             if (object instanceof RectangleMapObject) {
                 endGameZone = ((RectangleMapObject) object).getRectangle();
@@ -75,7 +75,7 @@ public class GameScreen implements Screen {
             }
         }
 
-        // Charger les pièges
+        // Load traps
         trap = new Array<>();
         for (MapObject object : map.getLayers().get("pièges").getObjects()) {
             if (object instanceof PolygonMapObject) {
@@ -84,8 +84,8 @@ public class GameScreen implements Screen {
             }
         }
 
-        // Charger les poissons
-        fishTexture = new Texture("fish.png"); // Texture du poisson
+        // // Load fishs
+        fishTexture = new Texture("fish.png");
         fishRectangles = new Array<>();
         for (MapObject object : map.getLayers().get("poisson").getObjects()) {
             if (object instanceof RectangleMapObject) {
@@ -94,19 +94,19 @@ public class GameScreen implements Screen {
             }
         }
 
-        // Initialiser le score et la police
+        // Initialize the score and the font
         score = 0;
         death_count = 0;
-        font = new BitmapFont(); // Utiliser une police par défaut
+        font = new BitmapFont();
         font.setColor(new Color(205 / 255f, 170 / 255f, 75 / 255f, 1));
-        font.getData().setScale(2); // Agrandir la police pour qu'elle soit lisible
+        font.getData().setScale(2);
     }
 
-    // si le joueur meurt
+    // if the player (cat) die
     private void resetGame() {
-        // Réinitialiser la position du joueur
+        // Reset th player's position
         player = new Player("catracter.png", 100, 290, 200);
-        isGameOver = false; // Réinitialiser l'état Game Over
+        isGameOver = false; // Reset Game over
         death_count += 1;
     }
 
@@ -121,41 +121,41 @@ public class GameScreen implements Screen {
         if (isGameOver) {
             batch.begin();
 
-            // Dessiner l'image Game Over sur tout l'écran
+            // Print Game over image full screen
             batch.draw(gameOverTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
             batch.end();
 
-            // Gérer le clic pour redémarrer
+            // clic to start
             if (Gdx.input.isTouched()) {
-                resetGame(); // Réinitialiser la partie
+                resetGame(); // Reset the game
             }
         } else {
-            // Mise à jour du joueur et des collisions
+            // Update of the player and collisions
             player.update(delta, collisionRectangles, trap);
 
-            // Vérifiez si le joueur est mort
+            // Check if the player is dead
             if (player.isDead()) {
                 isGameOver = true;
             }
 
             Rectangle playerRect = new Rectangle(player.getX(), player.getY(), player.getWidth(), player.getHeight());
-            // Vérification de la zone de fin
+            // Check the end zone
             if (endGameZone != null && playerRect.overlaps(endGameZone)) {
                 endWin = true;
             }
 
-            // Collecte des poissons
+            // Check score (fish gain)
             Array<Rectangle> collectedFishes = new Array<>();
             for (Rectangle fish : fishRectangles) {
                 if (playerRect.overlaps(fish)) {
-                    collectedFishes.add(fish); // Ajouter à la liste des poissons collectés
-                    score += 1; // Incrémenter le score
+                    collectedFishes.add(fish); // Add the collected fish list
+                    score += 1; // Increment score
                 }
             }
-            fishRectangles.removeAll(collectedFishes, true); // Supprimer les poissons collectés
+            fishRectangles.removeAll(collectedFishes, true); // delete collected fishs
 
-            // Mettre à jour la position de la caméra
+            // Update camera position
             camera.position.set(player.getX(), player.getY(), 0);
             float mapWidth = map.getProperties().get("width", Integer.class) * 32;
             float mapHeight = map.getProperties().get("height", Integer.class) * 32;
@@ -163,25 +163,25 @@ public class GameScreen implements Screen {
             camera.position.y = Math.max(camera.viewportHeight / 2, Math.min(camera.position.y, mapHeight - camera.viewportHeight / 2));
             camera.update();
 
-            // Rendu de la carte
+            // map
             batch.begin();
             renderer.setView(camera);
             renderer.render();
 
-            // Dessiner les poissons
+            // Draw fish
             for (Rectangle fish : fishRectangles) {
                 batch.draw(fishTexture, fish.x, fish.y, fish.width, fish.height);
             }
 
-            // Dessiner le joueur
+            // Draw player
             player.render(batch);
 
-            // Afficher les scores
+            // Display the score and the number of death
             font.draw(batch, "Score: " + score, camera.position.x + Gdx.graphics.getWidth() / 2 - 150, camera.position.y + Gdx.graphics.getHeight() / 2 - 20);
             font.draw(batch, "Dead : " + death_count, camera.position.x + Gdx.graphics.getWidth() / 2 - 600, camera.position.y + Gdx.graphics.getHeight() / 2 - 20);
 
             if (endWin) {
-                font.draw(batch, "You've won !", camera.position.x, camera.position.y); // Afficher "Win!" au centre
+                font.draw(batch, "You've won !", camera.position.x, camera.position.y);
             }
 
             batch.end();

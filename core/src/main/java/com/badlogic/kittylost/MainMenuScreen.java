@@ -16,7 +16,7 @@ public class MainMenuScreen implements Screen {
     public MainMenuScreen(KittyLostGame game) {
         this.game = game;
         batch = new SpriteBatch();
-        menuImage = new Texture("Menu_screen.png"); // image d'accueil
+        menuImage = new Texture("Menu_screen.png");
     }
 
     @Override
@@ -30,16 +30,16 @@ public class MainMenuScreen implements Screen {
 
         batch.begin();
 
-        // Dessiner l'image en pleine largeur et hauteur de l'écran
+        // Draw the Main Menu image
         batch.draw(menuImage, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         batch.end();
 
-        // Gérer les clics
+        // Manage clicks
         if (Gdx.input.isTouched()) {
-            // Passer à l'écran de jeu
+            // Click to go to game screen
             game.setScreen(new GameScreen(game));
-            dispose(); // Libérer les ressources de l'écran actuel
+            dispose(); // Release the resources of the current screen
         }
     }
 

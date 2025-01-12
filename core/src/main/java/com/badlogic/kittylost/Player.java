@@ -15,13 +15,13 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 public class Player {
     private Texture texture;
     private Sprite sprite;
-    private float x, y;  // Position du joueur
+    private float x, y;  // Player's position
     private float speed;
-    private float velocityY;  // Vitesse verticale (pour la gravité et le saut)
-    private float gravity = -600f;  // Force de gravité
-    private float jumpStrength = 300f;  // La force du saut
-    private boolean isJumping = false;  // Pour savoir si le joueur est en train de sauter
-    private boolean isOnGround = false;  // Vérifie si le joueur touche le sol
+    private float velocityY;  // Vertical vzlocity (gravity and jump)
+    private float gravity = -600f;  // Gravity force
+    private float jumpStrength = 300f;  // Jump strength
+    private boolean isJumping = false;  // To know if the player is jumping
+    private boolean isOnGround = false;  // Check if the player is on the ground
     private boolean isDead = false;
 
     private ShapeRenderer shapeRenderer;
@@ -48,10 +48,10 @@ public class Player {
     }
 
     public void update(float deltaTime, Array<Rectangle> collisionRectangles, Array<Polygon> trap) {
-        float oldX = x, oldY = y; // Sauvegarder la position précédente
+        float oldX = x, oldY = y;
         float newX = x , newY = y;
 
-        // Déplacement horizontal
+        // Horizontal move
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             newX += speed * deltaTime;
         }
@@ -59,52 +59,51 @@ public class Player {
             newX -= speed * deltaTime;
         }
 
-        // Gestion de la gravité et du saut
+        // Gravity and jump
         if (!isOnGround) {
-            velocityY += gravity * deltaTime; // Applique la gravité si le joueur n'est pas au sol
+            velocityY += gravity * deltaTime; // Applies gravity if the player is not on the ground
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.W) && isOnGround) {
-            velocityY = jumpStrength; // Applique la force de saut
-            isJumping = true; // Déclare que le joueur est en train de sauter
-            isOnGround = false; // Le joueur n'est plus au sol
+            velocityY = jumpStrength; // Applies jump strength
+            isJumping = true; // Say if the player is jumping or not
+            isOnGround = false; // Player not on the ground anymore
         }
 
         newY += velocityY * deltaTime;
 
-        // Vérification des collisions
-        //Rectangle playerRect = new Rectangle(newX, newY, sprite.getWidth(), sprite.getHeight());
+        // Check collision
         Rectangle playerRect = new Rectangle(
             newX,
-            newY , // Ajuster de 10 pixels vers le bas
+            newY ,
             sprite.getWidth(),
-            sprite.getHeight()  // Réduire la hauteur de la collision
+            sprite.getHeight()
         );
-        isOnGround = false; // Réinitialiser la détection au sol pour cette mise à jour
+        isOnGround = false; // Reset ground detection
 
         for (Rectangle rect : collisionRectangles) {
             if (playerRect.overlaps(rect)) {
-                // Collision verticale
+                // Vertical collision
                 if (oldY >= rect.y + rect.height) {
-                    newY = rect.y + rect.height ; // Positionner au-dessus de la plateforme
-                    velocityY = 0; // Stopper le mouvement vertical
-                    isOnGround = true; // Le joueur est sur le sol
-                    isJumping = false; // Le saut est terminé
+                    newY = rect.y + rect.height ; // Position above the platform
+                    velocityY = 0; // Stop vertical movement
+                    isOnGround = true; // The player is on the ground
+                    isJumping = false; // The jump is finished
                 } else if (oldY + sprite.getHeight() <= rect.y) {
-                    newY = rect.y - sprite.getHeight(); // Bloquer en dessous
+                    newY = rect.y - sprite.getHeight();
                     velocityY = 0;
                 }
 
-                // Collision horizontale
+                // Horizontal collision
                 if (oldX + sprite.getWidth() <= rect.x) {
-                    newX = rect.x - sprite.getWidth(); // Bloquer à gauche
+                    newX = rect.x - sprite.getWidth(); // Stuck to the left
                 } else if (oldX >= rect.x + rect.width) {
-                    newX = rect.x + rect.width; // Bloquer à droite
+                    newX = rect.x + rect.width; // Stuck to the right
                 }
             }
         }
 
-        // Vérification des collisions avec les pièges
+        // Checking interactions with traps
         for (Polygon traps : trap) {
             if (Intersector.overlapConvexPolygons(traps, new Polygon(new float[]{
                 newX, newY,
@@ -112,16 +111,16 @@ public class Player {
                 newX + sprite.getWidth(), newY + sprite.getHeight(),
                 newX, newY + sprite.getHeight()
             }))) {
-                System.out.println("Game Over!"); // Affiche Game Over dans la console
-                isDead = true; // permet de réinitialiser la partie et afficher un écran de Game Over
+                System.out.println("Game Over!");
+                isDead = true;
             }
         }
 
-        // Appliquer la nouvelle position
+        // Applies new position
         x = newX;
         y = newY;
 
-        // Mettre à jour la position du sprite
+        // Update sprite position
         sprite.setPosition(x, y);
     }
 
