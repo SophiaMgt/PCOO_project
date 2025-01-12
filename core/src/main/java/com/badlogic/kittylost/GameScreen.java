@@ -31,11 +31,15 @@ public class GameScreen implements Screen {
     private Texture fishTexture; // Texture des poissons
     private Array<Rectangle> fishRectangles; // Liste des poissons
 
-    private int score; // Score du joueur
+    private int score;
+    private int death_count;// Score du joueur
     private BitmapFont font; // Police pour afficher le score
 
     private Texture gameOverTexture; // Texture pour l'image Game Over
     private boolean isGameOver = false; // Indique si le joueur est mort
+
+    private Rectangle endGameZone; // Zone de fin
+    private boolean endWin = false; // Indique si le joueur a gagné
 
     public GameScreen(KittyLostGame game) {
         this.game = game;
@@ -63,6 +67,14 @@ public class GameScreen implements Screen {
             }
         }
 
+        // Charger la zone de fin
+        for (MapObject object : map.getLayers().get("end_zone").getObjects()) {
+            if (object instanceof RectangleMapObject) {
+                endGameZone = ((RectangleMapObject) object).getRectangle();
+                break;
+            }
+        }
+
         // Charger les pièges
         trap = new Array<>();
         for (MapObject object : map.getLayers().get("pièges").getObjects()) {
@@ -84,6 +96,7 @@ public class GameScreen implements Screen {
 
         // Initialiser le score et la police
         score = 0;
+        death_count = 0;
         font = new BitmapFont(); // Utiliser une police par défaut
         font.setColor(Color.BLACK);
         font.getData().setScale(2); // Agrandir la police pour qu'elle soit lisible
@@ -94,6 +107,7 @@ public class GameScreen implements Screen {
         // Réinitialiser la position du joueur
         player = new Player("catracter.png", 100, 290, 200);
         isGameOver = false; // Réinitialiser l'état Game Over
+        death_count += 1;
     }
 
     @Override
@@ -125,10 +139,14 @@ public class GameScreen implements Screen {
                 isGameOver = true;
             }
 
-            // Vérification de la collecte des poissons
             Rectangle playerRect = new Rectangle(player.getX(), player.getY(), player.getWidth(), player.getHeight());
-            Array<Rectangle> collectedFishes = new Array<>();
+            // Vérification de la zone de fin
+            if (endGameZone != null && playerRect.overlaps(endGameZone)) {
+                endWin = true;
+            }
 
+            // Collecte des poissons
+            Array<Rectangle> collectedFishes = new Array<>();
             for (Rectangle fish : fishRectangles) {
                 if (playerRect.overlaps(fish)) {
                     collectedFishes.add(fish); // Ajouter à la liste des poissons collectés
@@ -158,8 +176,13 @@ public class GameScreen implements Screen {
             // Dessiner le joueur
             player.render(batch);
 
-            // Afficher le score
+            // Afficher les scores
             font.draw(batch, "Score: " + score, camera.position.x + Gdx.graphics.getWidth() / 2 - 150, camera.position.y + Gdx.graphics.getHeight() / 2 - 20);
+            font.draw(batch, "Mort : " + death_count, camera.position.x + Gdx.graphics.getWidth() / 2 - 600, camera.position.y + Gdx.graphics.getHeight() / 2 - 20);
+
+            if (endWin) {
+                font.draw(batch, "Vous avez gagné !", camera.position.x, camera.position.y); // Afficher "Win!" au centre
+            }
 
             batch.end();
         }
