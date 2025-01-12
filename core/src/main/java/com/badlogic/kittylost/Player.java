@@ -41,7 +41,7 @@ public class Player {
 
         ShapeRenderer shapeRenderer = new ShapeRenderer();
 
-        sprite.setSize(55, 50);  // Taille du sprite
+        sprite.setSize(55, 50);
         sprite.setPosition(x, y);
     }
 
